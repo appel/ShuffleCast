@@ -22,13 +22,13 @@ I wanted a super simple way to shuffle my own music on my own smart speakers. Us
 This whole shindig consists of two services managed by `docker-compose.yml`:
 
 1.  **`icecast`**: The public-facing internet radio server. It receives audio from Liquidsoap and serves it to listeners.
-2.  **`liquidsoap`**: The "source" or "auto-DJ". It scans the `./music` directory for subfolders, creates a playlist for each one, processes the audio, and feeds it to Icecast.
+2.  **`liquidsoap`**: The "source" or "auto-DJ". It scans the `./music` directory for subfolders, creates a shuffled playlist for each one, processes the audio, and feeds it to Icecast.
 
 ## Prerequisites
 
   * Docker
   * Docker Compose
-  * A fistful of mp3s
+  * A fistful of MP3s
 
 ## Setup
 
