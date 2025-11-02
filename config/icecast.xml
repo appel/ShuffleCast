@@ -1,5 +1,5 @@
 <icecast>
-    <location>Earth</location>
+    <location>Earth 1</location>
     <admin>your@email.address</admin>
     <hostname>localhost</hostname>
 
@@ -10,27 +10,23 @@
     </listen-socket>
 
     <authentication>
-        <source-password>aaa</source-password>
-        <admin-password>bbb</admin-password>
-        <relay-password>ddd</relay-password>
+        <source-password>hunter2</source-password>
     </authentication>
 
     <fileserving>1</fileserving>
 
     <paths>
         <logdir>/var/log/icecast2</logdir>
-        <webroot>/usr/share/icecast2/web</webroot>
-        <adminroot>/usr/share/icecast2/admin</adminroot>
     </paths>
 
     <logging>
         <accesslog>access.log</accesslog>
         <errorlog>error.log</errorlog>
-        <loglevel>3</loglevel>
+        <loglevel>1</loglevel>
     </logging>
 
     <security>
-        <!-- Disable the built-in admin pages from being exposed -->
+        <!-- Disable built-in admin pages -->
         <chroot>0</chroot>
         <changeowner>
             <user>icecast2</user>
