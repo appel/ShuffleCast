@@ -57,15 +57,34 @@ Before you begin, your project must have the following directory structure. The 
 
 ### 2\. Add Your Music
 
-Copy your music files (e.g., `.mp3`, `.ogg`, `.flac`) into subfolders within the `music/` directory. The `liquidsoap.liq` script is pre-configured to look for the following folder names:
+Copy your music files (preferably `.mp3` with a fixed bitrate) into subfolders within the `music/` directory, e.g.:
 
   * `80s`
-  * `Coffeeshop`
   * `Jazz`
+  * `Lo-Fi`
+  * `MusicForCats`
   * `Halloween` (only active during the month of October) 
   * `Christmas` (only active during the month of December) 
 
-You can add or remove streams by editing the `liquidsoap.liq` file.
+These subfolders can then be turned into their own stream by adding them to the `liquidsoap.liq` config file, for example:
+
+```
+...
+make_stream("80s")
+make_stream("Jazz")
+make_stream("Lo-Fi")
+make_stream("MusicForCats")
+
+if month == 10 then
+  make_stream("Halloween")
+end
+
+if month == 12 then
+  make_stream("Christmas")
+end
+...
+```
+
 
 ### 3\. Review Configuration (Optional)
 
@@ -90,18 +109,19 @@ ShuffleCast should now be running\!
 
 ### Stream URLs
 
-Your streams will be available at the mount points defined in `liquidsoap.liq`. Based on the default config, your URLs will be:
+Your streams will be available at the mount points defined in `liquidsoap.liq`. Based on the previous examples, your stream URLs would be:
 
   * `http://<your-server-ip>:1907/80s`
-  * `http://<your-server-ip>:1907/coffeeshop`
   * `http://<your-server-ip>:1907/jazz`
-  * `http://<your-server-ip>:1907/halloween`
-  * `http://<your-server-ip>:1907/christmas`
+  * `http://<your-server-ip>:1907/lo-fi`
+  * `http://<your-server-ip>:1907/musicforcats`
+  * `http://<your-server-ip>:1907/halloween` (only in Oct)
+  * `http://<your-server-ip>:1907/christmas` (only in Dec)
 
 ### Adding a New Stream
 
 1.  Create a new music folder (e.g., `music/Grunge`).
-2.  Edit `config/liquidsoap.liq` and add a new line at the bottom:
+2.  Edit `config/liquidsoap.liq` and add a new line near the bottom of the file:
     ```liquidsoap
     make_stream("Grunge")
     ```
