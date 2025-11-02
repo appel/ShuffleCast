@@ -97,9 +97,9 @@ The default configuration should wwork out of the box, but you may want to chang
   * **`config/liquidsoap.liq`**:
       * `password = "aaa"` (Must match the `<source-password>` in `icecast.xml`).
 
-### 4\. Launch the Server
+### 4\. Launching ShuffleCast
 
-From the root directory of the project (where `docker-compose.yml` is), run:
+From the root directory (where `docker-compose.yml` is), run:
 
 ```bash
 docker-compose up -d
