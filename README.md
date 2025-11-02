@@ -17,7 +17,7 @@ I wanted a super simple way to shuffle my own music on my own smart speakers. Us
   * **Seasonal Streams:** The configuration includes logic to automatically enable "Halloween" and "Christmas" streams during October and December, respectively (if the corresponding folders exist).
   * **Easy Setup:** Get up and running by adding your music and running one command.
 
-## How It Works
+## How it works
 
 This whole shindig consists of two services managed by `docker-compose.yml`:
 
@@ -30,9 +30,9 @@ This whole shindig consists of two services managed by `docker-compose.yml`:
   * Docker Compose
   * A fistful of mp3s
 
-## Setup Instructions
+## Setup
 
-### 1\. Directory Structure
+### 1\. Directory structure
 
 Your project must have the following directory structure. The `docker-compose.yml` file relies on these specific paths.
 
@@ -57,7 +57,7 @@ Your project must have the following directory structure. The `docker-compose.ym
 └── docker-compose.yml
 ```
 
-### 2\. Add Your Music
+### 2\. Add your ditties
 
 Copy your music files (preferably `.mp3` with a fixed bitrate) into subfolders within the `music/` directory, e.g.:
 
@@ -87,18 +87,7 @@ end
 ...
 ```
 
-### 3\. Review Configuration (Optional)
-
-The default configuration should work out of the box, but you may want to change the port number (1907) or passwords.
-
-  * **`docker-compose.yml`**: Exposes the Icecast server on host port `1907`. You can change the `1907` part if you prefer (e.g., `"1234:8000"`).
-  * **`config/icecast.xml`**:
-      * `<source-password>`: `aaa` (Password Liquidsoap uses to connect).
-      * `<admin-password>`: `bbb` (Password for the Icecast web admin, which is disabled by default).
-  * **`config/liquidsoap.liq`**:
-      * `password = "aaa"` (Must match the `<source-password>` in `icecast.xml`).
-
-### 4\. Launching ShuffleCast
+### 3\. Launch ShuffleCast
 
 From the root directory (where `docker-compose.yml` is), run:
 
@@ -129,7 +118,7 @@ Your streams will be available at the mount points defined in `liquidsoap.liq`. 
 
 To add more songs to your streams you can simply drop more mp3s into your subfolders. Liquidsoap will pick them up automatically.
 
-### Adding a New Stream
+### Adding a new stream
 
 1.  Create a new music folder (e.g., `music/Grunge`).
 2.  Edit `config/liquidsoap.liq` and add a new line near the bottom of the file:
