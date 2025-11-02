@@ -28,7 +28,7 @@ This whole shindig consists of two services managed by `docker-compose.yml`:
 
   * Docker
   * Docker Compose
-  * A fistful of MP3s
+  * A fistful of mp3s
 
 ## Setup
 
