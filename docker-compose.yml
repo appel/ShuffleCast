@@ -6,7 +6,7 @@ services:
     ports:
       - "1907:8000"
     volumes:
-      - ./config/icecast:/etc/icecast2
+      - ./config/icecast.xml:/etc/icecast2/icecast.xml
     networks:
       - radio
 
