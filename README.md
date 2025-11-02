@@ -125,6 +125,10 @@ Your streams will be available at the mount points defined in `liquidsoap.liq`. 
   * `http://<your-server-ip>:1907/halloween` (only in Oct)
   * `http://<your-server-ip>:1907/christmas` (only in Dec)
 
+### Adding more songs
+
+To add more songs to your streams you can simply drop more mp3s into your subfolders. Liquidsoap will pick them up automatically.
+
 ### Adding a New Stream
 
 1.  Create a new music folder (e.g., `music/Grunge`).
