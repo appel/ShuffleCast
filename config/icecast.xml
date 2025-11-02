@@ -1,0 +1,40 @@
+<icecast>
+    <location>Earth</location>
+    <admin>your@email.address</admin>
+    <hostname>localhost</hostname>
+
+    <listen-socket>
+        <port>8000</port>
+        <!-- Uncomment if you want to bind to all addresses -->
+        <!-- <bind-address>0.0.0.0</bind-address> -->
+    </listen-socket>
+
+    <authentication>
+        <source-password>aaa</source-password>
+        <admin-password>bbb</admin-password>
+        <relay-password>ddd</relay-password>
+    </authentication>
+
+    <fileserving>1</fileserving>
+
+    <paths>
+        <logdir>/var/log/icecast2</logdir>
+        <webroot>/usr/share/icecast2/web</webroot>
+        <adminroot>/usr/share/icecast2/admin</adminroot>
+    </paths>
+
+    <logging>
+        <accesslog>access.log</accesslog>
+        <errorlog>error.log</errorlog>
+        <loglevel>3</loglevel>
+    </logging>
+
+    <security>
+        <!-- Disable the built-in admin pages from being exposed -->
+        <chroot>0</chroot>
+        <changeowner>
+            <user>icecast2</user>
+            <group>icecast</group>
+        </changeowner>
+    </security>
+</icecast>

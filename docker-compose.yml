@@ -1,0 +1,32 @@
+services:
+  icecast:
+    image: pltnk/icecast2:latest
+    container_name: icecast
+    restart: unless-stopped
+    ports:
+      - "1907:8000"
+    volumes:
+      - ./config/icecast:/etc/icecast2
+    networks:
+      - radio
+
+  liquidsoap:
+    image: phasecorex/liquidsoap:latest
+    container_name: liquidsoap
+    restart: unless-stopped
+    depends_on:
+      - icecast
+    volumes:
+      - ./config/liquidsoap.liq:/etc/liquidsoap/station.liq
+      - ./music:/music:ro
+    environment:
+      - TZ=America/New_York
+      # - PUID=1000
+      # - PGID=1000
+    command: ["/etc/liquidsoap/station.liq"]
+    networks:
+      - radio
+
+networks:
+  radio:
+    driver: bridge
