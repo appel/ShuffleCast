@@ -59,7 +59,7 @@ Your project must have the following directory structure. The `docker-compose.ym
 
 ### 2\. Add your ditties
 
-Copy your music files (preferably `.mp3` with a fixed bitrate) into subfolders within the `music/` directory, e.g.:
+Copy your music files (preferably `.mp3` with a fixed bitrate and, optionally, ReplayGain Track Gain metadata) into subfolders within the `music/` directory, e.g.:
 
   * `80s`
   * `Jazz`
