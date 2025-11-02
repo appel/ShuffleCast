@@ -5,7 +5,7 @@ ShuffleCast is a 'radio-in-a-box' which creates internet radio streams from mp3s
 ## Features
 
   * **Dockerized:** Runs both Icecast and Liquidsoap in separate containers.
-  * **Dynamic Streams:** The Liquidsoap script automatically creates a separate stream for each subfolder you create (e.g., `media/80s`, `media/Jazz`) and shuffles the mp3 files. Just copy your mp3s to each folder and Bob's your proverbial uncle!
+  * **Dynamic Streams:** The Liquidsoap script automatically creates a separate stream for each subfolder you create (e.g., `music/80s`, `music/Jazz`) and shuffles the mp3 files. Just copy your mp3s to each folder and Bob's your proverbial uncle!
   * **Audio Processing:** Includes built-in compression and normalization. No crossfading as of yet.
   * **Seasonal Streams:** The configuration includes logic to automatically enable "Halloween" and "Christmas" streams during October and December, respectively (if the corresponding folders exist).
   * **Easy Setup:** Get up and running by adding your music and running one command.
@@ -19,7 +19,7 @@ I wanted a simple way to play my own music on my own smart speakers. Using Googl
 This setup consists of two services managed by `docker-compose.yml`:
 
 1.  **`icecast`**: The public-facing internet radio server. It receives audio from Liquidsoap and serves it to listeners.
-2.  **`liquidsoap`**: The "source" or "auto-DJ". It scans the `./media` directory for subfolders, creates a playlist for each one, processes the audio, and feeds it to Icecast.
+2.  **`liquidsoap`**: The "source" or "auto-DJ". It scans the `./music` directory for subfolders, creates a playlist for each one, processes the audio, and feeds it to Icecast.
 
 The two containers communicate over a dedicated Docker network called `radio`.
 
@@ -39,7 +39,7 @@ Before you begin, your project must have the following directory structure. The 
 ├── config/
 │   ├── icecast.xml
 │   └── liquidsoap.liq
-├── media/
+├── music/
 │   ├── 80s/
 │   │   ├── take-on-me.mp3
 │   │   └── maniac.mp3
@@ -53,11 +53,11 @@ Before you begin, your project must have the following directory structure. The 
 ```
 
   * `config/`: Holds your configuration files.
-  * `media/`: This is your music library. Liquidsoap will turn each subfolder (`80s`, `Jazz`, etc.) into its own stream.
+  * `music/`: This is your music library. Liquidsoap will turn each subfolder (`80s`, `Jazz`, etc.) into its own stream.
 
 ### 2\. Add Your Music
 
-Copy your music files (e.g., `.mp3`, `.ogg`, `.flac`) into subfolders within the `media/` directory. The `liquidsoap.liq` script is pre-configured to look for the following folder names:
+Copy your music files (e.g., `.mp3`, `.ogg`, `.flac`) into subfolders within the `music/` directory. The `liquidsoap.liq` script is pre-configured to look for the following folder names:
 
   * `80s`
   * `Coffeeshop`
@@ -100,7 +100,7 @@ Your streams will be available at the mount points defined in `liquidsoap.liq`. 
 
 ### Adding a New Stream
 
-1.  Create a new music folder (e.g., `media/Grunge`).
+1.  Create a new music folder (e.g., `music/Grunge`).
 2.  Edit `config/liquidsoap.liq` and add a new line at the bottom:
     ```liquidsoap
     make_stream("Grunge")
