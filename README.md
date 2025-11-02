@@ -143,13 +143,6 @@ To add more songs to your streams you can simply drop more mp3s into your subfol
 
 Your new stream will be available at `http://<your-server-ip>:1907/grunge`.
 
-### Changing Passwords
-
-1.  Stop the containers: `docker-compose down`
-2.  In `config/icecast.xml`, change `<source-password>` and `<admin-password>` to new, secure values.
-3.  In `config/liquidsoap.liq`, change the `password = "aaa"` line to match the new `<source-password>`.
-4.  Start the containers: `docker-compose up -d`
-
 ### Here be dragons!
 
 I made this to scratch a personal itch. I'm by no means an Icecast, Liquidsoap, and/or Docker expert, so there is probably loads of room for improvement. Also note that this intended to be used locally, within your local network (which considering the bandwidth implications of opening it up to the world is probably for the best).
