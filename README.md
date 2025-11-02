@@ -1,6 +1,13 @@
 # ShuffleCast
 
-ShuffleCast is a 'radio-in-a-box' which creates internet radio streams from mp3s in subfolders. It aims to provide a super simple, barebones setup for running a multi-stream internet radio station using Docker Compose. It uses Icecast as the streaming server and Liquidsoap as a dynamic "auto-DJ" that creates streams from music folders.
+ShuffleCast is a dockerized 'radio-in-a-box' which creates internet radio streams from mp3s in subfolders. It aims to provide a super simple, barebones setup for running a multi-stream internet radio station using Docker Compose. It uses Icecast as the streaming server and Liquidsoap as a dynamic "auto-DJ" that creates streams from music folders. You can then use these streams anywhere you like: in any app that accepts stream URLs (like [VLC](https://www.videolan.org/vlc/), [Foobar2000](https://www.foobar2000.org/), [RadioTray](https://github.com/ebruck/radiotray-ng), [Eter](https://apps.apple.com/us/app/eter-streaming-internet-radio/id1523221566), [GaGa]https://github.com/Beluki/GaGa) (RIP Carlos) or [Winamp](https://winamp.com/player)), in your Home Assistent set-up, or directly in your browser.
+
+#### Why did I build this?
+
+First of all, I did not 'build' anything. :) All credit goes to the devs and maintainers of [Icecast](https://github.com/pltnk/docker-icecast2) and [Liquidsoap](https://github.com/pltnk/docker-liquidsoap). What I did was throw a few config files together.
+
+I wanted a super simple way to shuffle my own music on my own smart speakers. Using Plex to cast music to my speaker group was a frustratingly jittery mess, but I noticed I never had that issue when playing internet radio streams, like [KEXP](https://www.kexp.org/streaming-urls/) or [WNYC](https://www.wnyc.org/audio/other-formats/). I first tried [Azuracast](https://www.azuracast.com/), which works really well and is a truly awesome project with loads of configuration options, but managing it is a little involved and it was a little resource heavy on mt hardware. I wanted something simple and lightweight that I could run in my local network. Ergo, ShuffleCast! I've been using it for a few months and it has been working so well for me that I figured I'd share it here in case it's useful to others.
+
 
 ## Features
 
@@ -10,29 +17,27 @@ ShuffleCast is a 'radio-in-a-box' which creates internet radio streams from mp3s
   * **Seasonal Streams:** The configuration includes logic to automatically enable "Halloween" and "Christmas" streams during October and December, respectively (if the corresponding folders exist).
   * **Easy Setup:** Get up and running by adding your music and running one command.
 
-## Why did I build this?
-
-I wanted a simple way to play my own music on my own smart speakers. Using Google's cast was a frustratingly jittery mess, but I noticed I never had that issue when playing internet radio streams, like KEXP or my local NPR affiliate. I first tried [Azuracast](https://www.azuracast.com/), which worked great and is a truly awesome project, but managing it is a little involved. I wanted something simple and lightweight that I could run on my local network. Ergo, ShuffleCast! Sharing it here in case it is useful to anyone else.
-
 ## How It Works
 
-This setup consists of two services managed by `docker-compose.yml`:
+This whole shindig consists of two services managed by `docker-compose.yml`:
 
 1.  **`icecast`**: The public-facing internet radio server. It receives audio from Liquidsoap and serves it to listeners.
 2.  **`liquidsoap`**: The "source" or "auto-DJ". It scans the `./music` directory for subfolders, creates a playlist for each one, processes the audio, and feeds it to Icecast.
-
-The two containers communicate over a dedicated Docker network called `radio`.
 
 ## Prerequisites
 
   * Docker
   * Docker Compose
+  * A fistful of mp3s
 
 ## Setup Instructions
 
 ### 1\. Directory Structure
 
-Before you begin, your project must have the following directory structure. The `docker-compose.yml` file relies on these specific paths.
+Your project must have the following directory structure. The `docker-compose.yml` file relies on these specific paths.
+
+  * `config/`: Holds your configuration files.
+  * `music/`: This is your music library. Liquidsoap will turn each subfolder (`80s`, `Jazz`, etc.) into its own stream.
 
 ```
 .
@@ -42,7 +47,7 @@ Before you begin, your project must have the following directory structure. The 
 ├── music/
 │   ├── 80s/
 │   │   ├── take-on-me.mp3
-│   │   └── maniac.mp3
+│   │   └── ...
 │   ├── Jazz/
 │   │   ├── take-5.mp3
 │   │   └── ...
@@ -52,9 +57,6 @@ Before you begin, your project must have the following directory structure. The 
 └── docker-compose.yml
 ```
 
-  * `config/`: Holds your configuration files.
-  * `music/`: This is your music library. Liquidsoap will turn each subfolder (`80s`, `Jazz`, etc.) into its own stream.
-
 ### 2\. Add Your Music
 
 Copy your music files (preferably `.mp3` with a fixed bitrate) into subfolders within the `music/` directory, e.g.:
@@ -63,8 +65,8 @@ Copy your music files (preferably `.mp3` with a fixed bitrate) into subfolders w
   * `Jazz`
   * `Lo-Fi`
   * `MusicForCats`
-  * `Halloween` (only active during the month of October) 
-  * `Christmas` (only active during the month of December) 
+  * `Halloween` (only active during the month of October)
+  * `Christmas` (only active during the month of December)
 
 These subfolders can then be turned into their own stream by adding them to the `liquidsoap.liq` config file, for example:
 
@@ -85,15 +87,14 @@ end
 ...
 ```
 
-
 ### 3\. Review Configuration (Optional)
 
-The default configuration should wwork out of the box, but you may want to change the passwords.
+The default configuration should work out of the box, but you may want to change the port number (1907) or passwords.
 
-  * **`docker-compose.yml`**: Exposes the Icecast server on host port `1907`. You can change the `1907` part (e.g., `"8000:8000"`) if you prefer.
+  * **`docker-compose.yml`**: Exposes the Icecast server on host port `1907`. You can change the `1907` part if you prefer (e.g., `"1234:8000"`).
   * **`config/icecast.xml`**:
       * `<source-password>`: `aaa` (Password Liquidsoap uses to connect).
-      * `<admin-password>`: `bbb` (Password for the Icecast web admin).
+      * `<admin-password>`: `bbb` (Password for the Icecast web admin, which is disabled by default).
   * **`config/liquidsoap.liq`**:
       * `password = "aaa"` (Must match the `<source-password>` in `icecast.xml`).
 
@@ -102,10 +103,16 @@ The default configuration should wwork out of the box, but you may want to chang
 From the root directory (where `docker-compose.yml` is), run:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 ShuffleCast should now be running\!
+
+To see what Liquidsoap is up to, run:
+
+```bash
+docker compose logs "liquidsoap" -f
+```
 
 ### Stream URLs
 
@@ -127,7 +134,7 @@ Your streams will be available at the mount points defined in `liquidsoap.liq`. 
     ```
 3.  Restart the Liquidsoap container to apply the changes:
     ```bash
-    docker-compose restart liquidsoap
+    docker compose restart liquidsoap
     ```
 
 Your new stream will be available at `http://<your-server-ip>:1907/grunge`.
@@ -139,10 +146,10 @@ Your new stream will be available at `http://<your-server-ip>:1907/grunge`.
 3.  In `config/liquidsoap.liq`, change the `password = "aaa"` line to match the new `<source-password>`.
 4.  Start the containers: `docker-compose up -d`
 
-### Proceed with caution!
+### Here be dragons!
 
-I'm by no means an Icecast, Liquidsoap, and/or Docker expert, so there might be room for improvement. I only use these streams within my local network (which considering the bandwidth implications of opening it to the world is probably wise).
+I made this to scratch a personal itch. I'm by no means an Icecast, Liquidsoap, and/or Docker expert, so there is probably loads of room for improvement. Also note that this intended to be used locally, within your local network (which considering the bandwidth implications of opening it up to the world is probably for the best).
 
-That being said, it's been running locally for a few months now without any issues. No more jitters!
+That being said, it's been running for a few months now without any issues. No more jitters!
 
-Find any bugs? Or did you change anything to make it better? Please let me know and I'll consider adding it!
+Find any bugs? Or did you change anything to make it better? Please let me know and I'll consider adding it! Keep in mind that the goal is simplicity.
