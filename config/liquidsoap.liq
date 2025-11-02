@@ -28,7 +28,7 @@ def make_stream(name) =
     format = "audio/mpeg",
     host = "icecast",
     port = 8000,
-    password = "aaa",
+    password = "hunter2",
     mount = mount,
     name = name,
     description = desc,
@@ -45,12 +45,12 @@ end
 
 # Optional: Seasonal streams
 
+# This mount point is only active in October
 if month == 10 then
   make_stream("Halloween")
 end
 
+# This mount point is only active in December
 if month == 12 then
   make_stream("Christmas")
 end
-
-print("ShuffleCast Liquidsoap script parsed successfully!")
