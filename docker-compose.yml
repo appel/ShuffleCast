@@ -16,13 +16,15 @@ services:
     restart: unless-stopped
     depends_on:
       - icecast
+    ports:
+      - "1908:1908"
     volumes:
       - ./config/liquidsoap.liq:/etc/liquidsoap/station.liq
       - ./music:/music:ro
     environment:
       - TZ=America/New_York
-      # - PUID=1000
-      # - PGID=1000
+    # - PUID=1000
+    # - PGID=1000
     command: ["/etc/liquidsoap/station.liq"]
     networks:
       - radio
