@@ -123,27 +123,29 @@ Now you can run commands from the terminal, like so
 ./shufflecast.sh run help # Run raw command
 ```
 
-You can also skip songs directly:
+### Liquidsoap commands via telnet
+
+You can also run Liquidsoap commands directly. For example, this is how you skip tracks on the command line:
 
 ```bash
-bash -c 'echo "80s.skip" > /dev/tcp/localhost/1908'
-docker exec liquidsoap bash -c 'echo "80s.skip" > /dev/tcp/localhost/1908'
+bash -c 'echo "80s.skip" > /dev/tcp/localhost/1908' # Via bash
+docker exec liquidsoap bash -c 'echo "80s.skip" > /dev/tcp/localhost/1908' # Via docker
 ```
 
-This is handy if you want to integrate it with [Home Assistant](https://www.home-assistant.io/), for example:
+This is handy if you want to integrate it with [Home Assistant](https://www.home-assistant.io/). For example, here's how you'd make a 80s Skip Track switch:
 
 ```yaml
 # configuration.yaml
 switch:
   - platform: telnet
-    name: "Skip 80s track"
+    name: "80s Skip Track"
     resource: <your-server-ip> # Replace this with your server's IP address
     port: 1908
     command_on: "80s.skip"
     timeout: 0.5
 ```
 
-After adding this and restarting HA, you will have a "Skip 80s track" switch. When you turn it "on", it just sends the coffeeshop.skip command and then immediately turns itself back "off", acting as a perfect "skip" button.
+After adding this and restarting HA, you will have a "80s Skip Track" switch. When you turn it "on", it just sends the coffeeshop.skip command and then immediately turns itself back "off", acting as a perfect "skip" button.
 
 ### Stream URLs
 
