@@ -6,7 +6,7 @@
 #   chmod +x ./shufflecast.sh
 #
 # Usage:
-#   ./shufflecast.sh {start|stop|restart|update|skip|echo|run|logs} [icecast|liquidsoap|stream|command]
+#   ./shufflecast.sh {start|stop|restart|update|skip|run|logs} [icecast|liquidsoap|stream|command]
 #
 # Examples:
 #   ./shufflecast.sh restart
@@ -14,11 +14,10 @@
 #   ./shufflecast.sh update
 #   ./shufflecast.sh logs icecast
 #   ./shufflecast.sh skip 80s (skip current track on the 80s stream)
-#   ./shufflecast.sh echo help (outputs raw command)
-#   ./shufflecast.sh run 80s (runs raw command)
+#   ./shufflecast.sh run help (runs raw LiquidSoap command)
 
 # Uncomment if you want to run from a specific project directory
-# cd /share/Containers/shufflefm || exit
+# cd /share/Containers/shufflecast || exit
 
 SERVICE="$2"  # optional service name
 COMPOSE="docker compose"
@@ -76,16 +75,11 @@ case "$1" in
 
   run)
     COMMAND="$2"
-    docker exec liquidsoap bash -c "exec 3<>/dev/tcp/localhost/1908; echo \"${COMMAND}\" >&3; exec 3<&- 3>&-"
-    ;;
-
-  echo)
-    COMMAND="$2"
-    docker exec liquidsoap bash -c "exec 3<>/dev/tcp/localhost/1908; echo \"${COMMAND}\" >&3; cat <&3"
+    docker exec liquidsoap bash -c "exec 3<>/dev/tcp/localhost/1908; echo \"${COMMAND}\" >&3; sed '/END/q' <&3"
     ;;
 
   *)
-    echo "Usage: $0 {start|stop|restart|update|skip|run|echo|logs} [icecast|liquidsoap|stream|command]"
+    echo "Usage: $0 {start|stop|restart|update|skip|run|logs} [icecast|liquidsoap|stream|command]"
     exit 1
     ;;
 esac
