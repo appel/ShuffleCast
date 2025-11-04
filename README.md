@@ -13,10 +13,11 @@ I wanted a super simple way to shuffle my own music on my own smart speakers. Us
 
   * **Dockerized:** Runs both Icecast and Liquidsoap in separate containers.
   * **Dynamic Streams:** The Liquidsoap script automatically creates a separate stream for each subfolder you create (e.g., `music/80s`, `music/Jazz`) and shuffles the mp3 files. Just copy your mp3s to each folder and Bob's your proverbial uncle!
-  * **Audio Processing:** Includes built-in compression and normalization. No crossfading as of yet.
+  * **Audio Processing:** Includes built-in optional compression and normalization.
+  * **Consistent volume:** Uses the `replaygain_track_gain` metatag (if available) for consistent volume.
   * **Seasonal Streams:** The configuration includes logic to automatically enable "Halloween" and "Christmas" streams during October and December, respectively (if the corresponding folders exist).
   * **Easy Setup:** Get up and running by adding your music and running one command.
-  * **Easy Setup:** Comes with a bash script to control ShuffleCast (start, restart, update, skip, echo, run & logs).
+  * **Easy Control:** Comes with a bash script to control ShuffleCast (start, restart, update, skip, echo, run & logs).
 
 ## How it works
 
@@ -58,7 +59,7 @@ Your project must have the following directory structure. The `docker-compose.ym
 └── docker-compose.yml
 ```
 
-### 2\. Add your ditties
+### 2\. Add your ditties and jams
 
 Copy your music files (preferably `.mp3` with a fixed bitrate and, optionally, ReplayGain Track Gain metadata) into subfolders within the `music/` directory, e.g.:
 
@@ -104,7 +105,7 @@ To see what Liquidsoap is up to, run:
 docker compose logs "liquidsoap" -f
 ```
 
-### ShuffleCast bash script
+### ShuffleCast remote
 
 From the root directory (where `docker-compose.yml` is), run:
 
@@ -112,7 +113,7 @@ From the root directory (where `docker-compose.yml` is), run:
 sudo chmod +x ./shufflecast.sh
 ```
 
-Now you can run commands, like so
+Now you can run commands from the terminal, like so
 
 ```bash
 ./shufflecast.sh skip 80s # Skip current track on 80s mountpoint
@@ -121,6 +122,28 @@ Now you can run commands, like so
 ./shufflecast.sh logs # Show logs for both containers (optional parameter: icecast|liquidsoap)
 ./shufflecast.sh run help # Run raw command
 ```
+
+You can also skip songs directly:
+
+```bash
+bash -c 'echo "80s.skip" > /dev/tcp/localhost/1908'
+docker exec liquidsoap bash -c 'echo "80s.skip" > /dev/tcp/localhost/1908'
+```
+
+This is handy if you want to integrate it with [Home Assistant](https://www.home-assistant.io/), for example:
+
+```yaml
+# configuration.yaml
+switch:
+  - platform: telnet
+    name: "Skip 80s track"
+    resource: <your-server-ip> # Replace this with your server's IP address
+    port: 1908
+    command_on: "80s.skip"
+    timeout: 0.5
+```
+
+After adding this and restarting HA, you will have a "Skip 80s track" switch. When you turn it "on", it just sends the coffeeshop.skip command and then immediately turns itself back "off", acting as a perfect "skip" button.
 
 ### Stream URLs
 
