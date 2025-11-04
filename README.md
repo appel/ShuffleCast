@@ -105,6 +105,35 @@ To see what Liquidsoap is up to, run:
 docker compose logs "liquidsoap" -f
 ```
 
+### Stream URLs
+
+Your streams will be available at the mount points defined in `liquidsoap.liq`. Based on the previous examples, your stream URLs would be:
+
+  * `http://<your-server-ip>:1907/80s`
+  * `http://<your-server-ip>:1907/jazz`
+  * `http://<your-server-ip>:1907/lo-fi`
+  * `http://<your-server-ip>:1907/musicforcats`
+  * `http://<your-server-ip>:1907/halloween` (only in Oct)
+  * `http://<your-server-ip>:1907/christmas` (only in Dec)
+
+### Adding more songs
+
+To add more songs to your streams you can simply drop more mp3s into your subfolders. Liquidsoap will pick them up automatically.
+
+### Adding a new stream
+
+1.  Create a new music folder (e.g., `music/Grunge`).
+2.  Edit `config/liquidsoap.liq` and add a new line near the bottom of the file:
+    ```liquidsoap
+    make_stream("Grunge")
+    ```
+3.  Restart the Liquidsoap container to apply the changes:
+    ```bash
+    docker compose restart liquidsoap
+    ```
+
+Your new stream will be available at `http://<your-server-ip>:1907/grunge`.
+
 ### ShuffleCast remote
 
 From the root directory (where `docker-compose.yml` is), run:
@@ -146,35 +175,6 @@ switch:
 ```
 
 After adding this and restarting HA, you will have a "80s Skip Track" switch. When you turn it "on", it just sends the coffeeshop.skip command and then immediately turns itself back "off", acting as a perfect "skip" button.
-
-### Stream URLs
-
-Your streams will be available at the mount points defined in `liquidsoap.liq`. Based on the previous examples, your stream URLs would be:
-
-  * `http://<your-server-ip>:1907/80s`
-  * `http://<your-server-ip>:1907/jazz`
-  * `http://<your-server-ip>:1907/lo-fi`
-  * `http://<your-server-ip>:1907/musicforcats`
-  * `http://<your-server-ip>:1907/halloween` (only in Oct)
-  * `http://<your-server-ip>:1907/christmas` (only in Dec)
-
-### Adding more songs
-
-To add more songs to your streams you can simply drop more mp3s into your subfolders. Liquidsoap will pick them up automatically.
-
-### Adding a new stream
-
-1.  Create a new music folder (e.g., `music/Grunge`).
-2.  Edit `config/liquidsoap.liq` and add a new line near the bottom of the file:
-    ```liquidsoap
-    make_stream("Grunge")
-    ```
-3.  Restart the Liquidsoap container to apply the changes:
-    ```bash
-    docker compose restart liquidsoap
-    ```
-
-Your new stream will be available at `http://<your-server-ip>:1907/grunge`.
 
 ### Here be dragons!
 
