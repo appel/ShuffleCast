@@ -16,6 +16,7 @@ I wanted a super simple way to shuffle my own music on my own smart speakers. Us
   * **Audio Processing:** Includes built-in compression and normalization. No crossfading as of yet.
   * **Seasonal Streams:** The configuration includes logic to automatically enable "Halloween" and "Christmas" streams during October and December, respectively (if the corresponding folders exist).
   * **Easy Setup:** Get up and running by adding your music and running one command.
+  * **Easy Setup:** Comes with a bash script to control ShuffleCast (start, restart, update, skip, echo, run & logs).
 
 ## How it works
 
@@ -101,6 +102,24 @@ To see what Liquidsoap is up to, run:
 
 ```bash
 docker compose logs "liquidsoap" -f
+```
+
+### ShuffleCast bash script
+
+From the root directory (where `docker-compose.yml` is), run:
+
+```bash
+sudo chmod +x ./shufflecast.sh
+```
+
+Now you can run commands, like so
+
+```bash
+./shufflecast.sh skip 80s # Skip current track on 80s mountpoint
+./shufflecast.sh restart # Restart both containers (optional parameter: icecast|liquidsoap)
+./shufflecast.sh update # Update both containers
+./shufflecast.sh logs # Show logs for both containers (optional parameter: icecast|liquidsoap)
+./shufflecast.sh run help # Run raw command
 ```
 
 ### Stream URLs
